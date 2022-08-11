@@ -1,0 +1,1 @@
+Crear una carpeta DataBd, dentro poner la data a importar.
