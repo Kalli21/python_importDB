@@ -6,7 +6,8 @@ class ImportDataBD():
 
     def run(self):
         try:
-            self.__connection = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-PJLPNQF;DATABASE=AuxAlmacen;Trusted_Connection=yes;')
+            #Configuracion de conxion con BD
+            self.__connection = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-GDNGFOA\SQLEXPRESS;DATABASE=AuxAlmacen;Trusted_Connection=yes;')
             print("===========================================================")
             print("Conexión exitosa.")
             self.__cursor = self.__connection.cursor()
