@@ -29,6 +29,7 @@ class ImportDataBD():
             self.__grupoClave()
             self.__Pedido()
             self.__detPedido()
+            self.__dataPr_Pg_Py()
             
         except Exception as ex:
             print("**********************************************************")
@@ -572,6 +573,59 @@ class ImportDataBD():
             print("Error al importar data almacenes {}".format(ex))
             print("**********************************************************")
             
-                     
+    def __dataPr_Pg_Py(self):
+    
+        try:
+            #TRATAMIENTO DE LA DATA CON PANDAS
+            df = pd.read_csv("src\DataBd\PgPyPr.txt", sep = "|",dtype='str', encoding='UTF-16')
+            df['fecha_modificacion'] = df['fecha_modificacion'].astype('datetime64')
+            values = {"fecha_modificacion": 'None',"precedente": '-1', 'user_modificacion':''}
+            df.fillna(value=values,inplace=True)
+            df.fillna('',inplace=True)
+            df[df.columns.values] = df[df.columns.values].astype('string')
+            
+            lisinit = ['precedente']
+            lisFloat = []
+            lisbool = []
+            lisFecha = ['fecha_modificacion']
+            lisStr = ['numero_ppp','cod_interno','Descripcion','observaciones','obj_general','user_modificacion','obj_general2']
+            
+            df[lisinit] = df[lisinit].astype('int64')
+            df[lisFloat] = df[lisFloat].astype('float64')
+            df[lisStr+lisFecha] = df[lisStr+lisFecha].astype('string')
+            df[lisbool] = df[lisbool].astype('bool')
+            
+            #---------------------------------------------
+
+            for index, row in df.iterrows():
+            
+                if (row['fecha_modificacion'] !='None'): 
+                    if (row['fecha_modificacion'].find('.')!=-1):
+                        f1= datetime.strptime(row['fecha_modificacion'], '%Y-%m-%d %H:%M:%S.%f')
+                    else:
+                        f1= datetime.strptime(row['fecha_modificacion'], '%Y-%m-%d %H:%M:%S')
+                else: f1= None
+                if (row['precedente'] !='-1'): p1= row['precedente']
+                else: p1= None
+                
+                self.__cursor.execute("insert into Pr_Pg_Py(numero_ppp,cod_interno,Descripcion,precedente,observaciones,obj_general,fecha_modificacion,user_modificacion,obj_general2)values (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    ,row['numero_ppp']
+                    ,row['cod_interno']
+                    ,row['Descripcion']
+                    ,p1
+                    ,None
+                    ,None
+                    ,f1
+                    ,row['user_modificacion']
+                    ,None)
+            #commit the transaction
+            self.__connection.commit()
+            print("Insercion de Pr_Pg_Py")
+            
+        except Exception as ex:
+            print("**********************************************************")
+            print("Error al importar data almacenes {}".format(ex))
+            print("**********************************************************")
+                             
 importador = ImportDataBD()
 importador.run()
