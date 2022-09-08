@@ -7,7 +7,7 @@ class ImportDataBD():
     def run(self):
         try:
             #Configuracion de conxion con BD
-            self.__connection = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-GDNGFOA\SQLEXPRESS;DATABASE=AuxAlmacen;Trusted_Connection=yes;')
+            self.__connection = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-PJLPNQF;DATABASE=AuxAlmacen;Trusted_Connection=yes;')
             print("===========================================================")
             print("Conexión exitosa.")
             self.__cursor = self.__connection.cursor()
@@ -282,7 +282,7 @@ class ImportDataBD():
             
             for i in range(df.shape[0]):
                 a = bool(df['ingreso'][i])
-                self.__cursor.execute("insert into AL_TIPO_TRANSACCION(cod_tipo_transaccion,descripción,ingreso)values (?, ?, ?)"
+                self.__cursor.execute("insert into AL_TIPO_TRANSACCION(cod_tipo_transaccion,descripcion,ingreso)values (?, ?, ?)"
                     ,df['cod_tipo_transaccion'][i]
                     ,df['descripción'][i]
                     ,a)
